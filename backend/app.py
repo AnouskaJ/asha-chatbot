@@ -1,29 +1,36 @@
+             firebase_admin.initialize_app(cred)
+             logger.info("Firebase Admin SDK initialized successfully.")
+         else:
+              logger.info("Firebase Admin SDK already initialized.")
+         # Get the Firestore client instance
+         db_firestore = firestore.client()
 
-GEMINI_API_KEY = config.GEMINI_API_KEY
+except Exception as e:
+    # Log any other unexpected error during initialization
+    logger.critical(f"CRITICAL: Failed to initialize Firebase Admin SDK: {e}", exc_info=True)
+    db_firestore = None # Ensure db_firestore is None on any init error
+# --- End Firebase Admin Init ---
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__) # Define logger HERE
+# --- Type Definitions for Analytics ---
 
-# -----------------------------------------------------------------------------
-# Firebase Admin SDK Initialization
-# -----------------------------------------------------------------------------
-db_firestore = None # Initialize as None globally
-try:
-    # --- Construct the relative path to the key file ---
-    # Path(__file__) is the path to app.py
-    # .parent gets the directory containing app.py (backend/)
-    # Then navigate into 'config' and specify the filename
-    relative_path_to_key = Path(__file__).parent / "config" / "asha-ai-firebase-adminsdk-fbsvc-e10ece5897.json"
+# Define nested structures first
+class BiasMetrics(TypedDict, total=False): # total=False makes keys optional
+    bias_detected_count: int
+    bias_prevented_count: int
+    bias_types: Dict[str, int]
+    prevention_rate: Optional[float] # Can be None
 
-    if not relative_path_to_key.exists():
-         # This error is critical if you *only* rely on the relative path
-         logger.error(f"Firebase service account key NOT FOUND at expected relative path: {relative_path_to_key}")
-         logger.error("Ensure the key file exists in the 'backend/config/' directory.")
-         # db_firestore remains None
-    else:
-         logger.info(f"Using service account key found at: {relative_path_to_key}")
-         # Initialize using the path object converted to a string
-         cred = credentials.Certificate(str(relative_path_to_key))
+class ConversationsAnalytics(TypedDict, total=False):
+    total_conversations: int
+    conversations_by_date: Dict[str, int] # Key is YYYY-MM-DD date string
+    language_distribution: Dict[str, int]
+    topic_distribution: Dict[str, int]
+    response_times: List[float] # List of response times in seconds
+    messages_per_conversation: List[int] # Optional: if you calculate this
+    avg_messages_per_conversation: Optional[float] # Optional: if you calculate this
+    bias_metrics: BiasMetrics
+    last_updated: Optional[str] # ISO format timestamp
 
-         # Check if the app is already initialized (prevents errors on hot-reloading)
-         if not firebase_admin._apps:
+class UserAnalytics(TypedDict, total=False):
+    total_users: int
+    active_users: int # This is an approximation in the current code
