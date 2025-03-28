@@ -1,36 +1,28 @@
-             firebase_admin.initialize_app(cred)
-             logger.info("Firebase Admin SDK initialized successfully.")
-         else:
-              logger.info("Firebase Admin SDK already initialized.")
-         # Get the Firestore client instance
-         db_firestore = firestore.client()
+    new_users: Optional[int] # Marked as Optional as it's hard to track from events
+    retention_rate: Optional[float] # Marked as Optional
+    # Add other user metrics if needed
 
-except Exception as e:
-    # Log any other unexpected error during initialization
-    logger.critical(f"CRITICAL: Failed to initialize Firebase Admin SDK: {e}", exc_info=True)
-    db_firestore = None # Ensure db_firestore is None on any init error
-# --- End Firebase Admin Init ---
+class AccuracyRatings(TypedDict, total=False):
+    accurate: int
+    inaccurate: int
+    unsure: int
+    other: int
 
-# --- Type Definitions for Analytics ---
+class ResponseQuality(TypedDict, total=False):
+     helpful: int
+     not_helpful: int
 
-# Define nested structures first
-class BiasMetrics(TypedDict, total=False): # total=False makes keys optional
-    bias_detected_count: int
-    bias_prevented_count: int
-    bias_types: Dict[str, int]
-    prevention_rate: Optional[float] # Can be None
-
-class ConversationsAnalytics(TypedDict, total=False):
-    total_conversations: int
-    conversations_by_date: Dict[str, int] # Key is YYYY-MM-DD date string
-    language_distribution: Dict[str, int]
-    topic_distribution: Dict[str, int]
-    response_times: List[float] # List of response times in seconds
-    messages_per_conversation: List[int] # Optional: if you calculate this
-    avg_messages_per_conversation: Optional[float] # Optional: if you calculate this
-    bias_metrics: BiasMetrics
+class FeedbackAnalytics(TypedDict, total=False):
+    total_feedback: int
+    accuracy_ratings: AccuracyRatings
+    calculated_accuracy_rate: Optional[float] # Can be None
+    feedback_by_date: Dict[str, int] # Key is YYYY-MM-DD date string
+    response_quality: ResponseQuality
     last_updated: Optional[str] # ISO format timestamp
 
-class UserAnalytics(TypedDict, total=False):
-    total_users: int
-    active_users: int # This is an approximation in the current code
+# Define the main AnalyticsData structure
+class AnalyticsData(TypedDict):
+    # These keys are expected based on the aggregation logic
+    conversations: ConversationsAnalytics
+    users: UserAnalytics
+    feedback: FeedbackAnalytics
