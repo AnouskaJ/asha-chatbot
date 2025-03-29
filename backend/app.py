@@ -1,30 +1,30 @@
-
-# --- End Type Definitions ---
+        "http://127.0.0.1:3000",
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+        # Add production frontend URL here if applicable
+    ]
 
 # -----------------------------------------------------------------------------
-# Configuration
+# Setup Logging
 # -----------------------------------------------------------------------------
-class Config:
-    # File Paths (relative to the app.py file location)
-    DATA_DIR = Path(__file__).parent / "data"
-    CHROMA_DB_PATH = DATA_DIR / "chroma_db"
-    SESSIONS_FILE = DATA_DIR / "session_details.json"
-    JOBS_FILE = DATA_DIR / "job_listing_data.csv"
-    TRUSTED_SOURCES_FILE = DATA_DIR / "trusted_sources.json"
-    ANALYTICS_DIR = DATA_DIR / "analytics"
-    FEEDBACK_DIR = DATA_DIR / "feedback"
-    FEEDBACK_LIST_FILE = FEEDBACK_DIR / "feedback_list.json"
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-    # API Keys
-    GEMINI_API_KEY = os.getenv(GEMINI_API_KEY) # Replace fallback
-
-    # ChromaDB
-    CHROMA_COLLECTION_NAME = "asha_knowledge"
-
-    # Analytics
-    ANALYTICS_DATE_FORMAT = "%Y-%m-%d"
-    ANALYTICS_SUMMARY_DAYS = 30 # How many days of daily data to keep in summaries
-
-    # CORS Origins
-    CORS_ORIGINS = [
-        "http://localhost:3000",
+# -----------------------------------------------------------------------------
+# File I/O Helpers
+# -----------------------------------------------------------------------------
+def read_json(file_path: Path, default: Any = None) -> Any:
+    """Safely reads JSON data from a file."""
+    if not file_path.exists():
+        logger.warning(f"JSON file not found: {file_path}. Returning default.")
+        return default
+    try:
+        with file_path.open('r', encoding='utf-8') as f:
+            content = f.read().strip()
+            if not content:
+                logger.warning(f"JSON file is empty: {file_path}. Returning default.")
+                return default
+            return json.loads(content)
+    except (json.JSONDecodeError, IOError, UnicodeDecodeError) as e:
+        logger.error(f"Error reading JSON file {file_path}: {e}")
+        return default
