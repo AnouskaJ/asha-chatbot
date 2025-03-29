@@ -1,28 +1,30 @@
-    new_users: Optional[int] # Marked as Optional as it's hard to track from events
-    retention_rate: Optional[float] # Marked as Optional
-    # Add other user metrics if needed
 
-class AccuracyRatings(TypedDict, total=False):
-    accurate: int
-    inaccurate: int
-    unsure: int
-    other: int
+# --- End Type Definitions ---
 
-class ResponseQuality(TypedDict, total=False):
-     helpful: int
-     not_helpful: int
+# -----------------------------------------------------------------------------
+# Configuration
+# -----------------------------------------------------------------------------
+class Config:
+    # File Paths (relative to the app.py file location)
+    DATA_DIR = Path(__file__).parent / "data"
+    CHROMA_DB_PATH = DATA_DIR / "chroma_db"
+    SESSIONS_FILE = DATA_DIR / "session_details.json"
+    JOBS_FILE = DATA_DIR / "job_listing_data.csv"
+    TRUSTED_SOURCES_FILE = DATA_DIR / "trusted_sources.json"
+    ANALYTICS_DIR = DATA_DIR / "analytics"
+    FEEDBACK_DIR = DATA_DIR / "feedback"
+    FEEDBACK_LIST_FILE = FEEDBACK_DIR / "feedback_list.json"
 
-class FeedbackAnalytics(TypedDict, total=False):
-    total_feedback: int
-    accuracy_ratings: AccuracyRatings
-    calculated_accuracy_rate: Optional[float] # Can be None
-    feedback_by_date: Dict[str, int] # Key is YYYY-MM-DD date string
-    response_quality: ResponseQuality
-    last_updated: Optional[str] # ISO format timestamp
+    # API Keys
+    GEMINI_API_KEY = os.getenv(GEMINI_API_KEY) # Replace fallback
 
-# Define the main AnalyticsData structure
-class AnalyticsData(TypedDict):
-    # These keys are expected based on the aggregation logic
-    conversations: ConversationsAnalytics
-    users: UserAnalytics
-    feedback: FeedbackAnalytics
+    # ChromaDB
+    CHROMA_COLLECTION_NAME = "asha_knowledge"
+
+    # Analytics
+    ANALYTICS_DATE_FORMAT = "%Y-%m-%d"
+    ANALYTICS_SUMMARY_DAYS = 30 # How many days of daily data to keep in summaries
+
+    # CORS Origins
+    CORS_ORIGINS = [
+        "http://localhost:3000",
