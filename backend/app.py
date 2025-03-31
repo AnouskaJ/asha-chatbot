@@ -1,30 +1,30 @@
-        "http://127.0.0.1:3000",
-        "http://localhost:5000",
-        "http://127.0.0.1:5000",
-        # Add production frontend URL here if applicable
-    ]
 
-# -----------------------------------------------------------------------------
-# Setup Logging
-# -----------------------------------------------------------------------------
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-# -----------------------------------------------------------------------------
-# File I/O Helpers
-# -----------------------------------------------------------------------------
-def read_json(file_path: Path, default: Any = None) -> Any:
-    """Safely reads JSON data from a file."""
-    if not file_path.exists():
-        logger.warning(f"JSON file not found: {file_path}. Returning default.")
-        return default
+def write_json(file_path: Path, data: Any):
+    """Safely writes JSON data to a file."""
     try:
-        with file_path.open('r', encoding='utf-8') as f:
-            content = f.read().strip()
-            if not content:
-                logger.warning(f"JSON file is empty: {file_path}. Returning default.")
-                return default
-            return json.loads(content)
-    except (json.JSONDecodeError, IOError, UnicodeDecodeError) as e:
-        logger.error(f"Error reading JSON file {file_path}: {e}")
-        return default
+        file_path.parent.mkdir(parents=True, exist_ok=True) # Ensure directory exists
+        with file_path.open('w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        # logger.info(f"Successfully wrote JSON to {file_path}")
+        return True
+    except (IOError, TypeError) as e:
+        logger.error(f"Error writing JSON file {file_path}: {e}")
+        return False
+
+def read_csv(file_path: Path) -> List[Dict[str, str]]:
+    """Reads data from a CSV file into a list of dictionaries."""
+    data = []
+    if not file_path.exists():
+        logger.warning(f"CSV file not found: {file_path}. Returning empty list.")
+        return data
+    try:
+        with file_path.open('r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                data.append(row)
+        return data
+    except (IOError, csv.Error) as e:
+        logger.error(f"Error reading CSV file {file_path}: {e}")
+        return [] # Return empty list on error
+
+def write_csv(file_path: Path, data: List[Dict[str, Any]], fieldnames: Optional[List[str]] = None):
