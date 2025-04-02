@@ -1,30 +1,30 @@
-def log_analytics_event(event_type: str, event_data: Dict[str, Any]):
-    """Logs an analytics event by reading, appending, and writing a JSON array file."""
+                # analytics_file.rename(backup_path)
+
+        # Append the new event
+        events_for_day.append(event)
+
+        # Write the entire updated array back
+        if not write_json(analytics_file, events_for_day):
+             logger.error(f"Failed to write updated events array to {analytics_file}")
+             return False # Indicate failure
+
+        # logger.info(f"Logged event {event_id} to {analytics_file}") # Optional: Log success
+        return True
+
+    except Exception as e:
+        # Catch potential errors during read/write or processing
+        logger.error(f"Error logging analytics event to JSON array file: {e}", exc_info=True)
+        return False
+# -----------------------------------------------------------------------------
+# Bias Detection Functions (Mostly unchanged, added type hint)
+# -----------------------------------------------------------------------------
+def detect_bias(user_query: str) -> Tuple[bool, Optional[str]]:
+    """Detects bias and its type. Returns (is_biased, bias_type)."""
     try:
-        Config.ANALYTICS_DIR.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now()
-        event_id = str(uuid.uuid4())
-
-        event = {
-            "id": event_id,
-            "timestamp": timestamp.isoformat(),
-            "event_type": event_type,
-            "data": event_data
-        }
-
-        date_str = timestamp.strftime(Config.ANALYTICS_DATE_FORMAT)
-        # Ensure we use the .json extension
-        analytics_file = Config.ANALYTICS_DIR / f"events_{date_str}.json"
-
-        # --- Read-Modify-Write Logic ---
-        events_for_day = []
-        if analytics_file.exists():
-            # Read the existing array using the helper
-            existing_data = read_json(analytics_file, default=[]) # Default to empty list on error/empty
-            # Ensure it's actually a list
-            if isinstance(existing_data, list):
-                events_for_day = existing_data
-            else:
-                logger.warning(f"Analytics file {analytics_file} did not contain a list. Starting fresh for today.")
-                # Optionally, back up the corrupted file here before overwriting
-                # backup_path = analytics_file.with_suffix(f".json.corrupted.{timestamp.isoformat().replace(':','-')}")
+        # Configure Gemini if needed (moved key config outside)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        prompt = f"""
+        Analyze the following query for gender, racial, religious, age, or other harmful biases/stereotypes:
+        Query: "{user_query}"
+        Respond ONLY with "Biased: Yes, Type: [type]" or "Biased: No". Replace [type] with one of: gender, racial, religious, age, other.
+        """
