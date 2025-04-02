@@ -1,30 +1,30 @@
-    """Writes a list of dictionaries to a CSV file."""
+def log_analytics_event(event_type: str, event_data: Dict[str, Any]):
+    """Logs an analytics event by reading, appending, and writing a JSON array file."""
     try:
-        file_path.parent.mkdir(parents=True, exist_ok=True)
-        if not data and not fieldnames:
-            # Create an empty file if no data and no headers specified
-            file_path.touch()
-            logger.warning(f"Writing empty CSV file as no data or fieldnames provided: {file_path}")
-            return True
+        Config.ANALYTICS_DIR.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now()
+        event_id = str(uuid.uuid4())
 
-        if not fieldnames and data:
-            fieldnames = list(data[0].keys()) # Infer headers from first row if not provided
+        event = {
+            "id": event_id,
+            "timestamp": timestamp.isoformat(),
+            "event_type": event_type,
+            "data": event_data
+        }
 
-        if not fieldnames:
-             logger.error(f"Cannot write CSV file without fieldnames: {file_path}")
-             return False
+        date_str = timestamp.strftime(Config.ANALYTICS_DATE_FORMAT)
+        # Ensure we use the .json extension
+        analytics_file = Config.ANALYTICS_DIR / f"events_{date_str}.json"
 
-        with file_path.open('w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(data)
-        # logger.info(f"Successfully wrote CSV to {file_path}")
-        return True
-    except (IOError, csv.Error, IndexError) as e:
-        logger.error(f"Error writing CSV file {file_path}: {e}")
-        return False
-
-# -----------------------------------------------------------------------------
-# Analytics Logging (Simplified - logs raw events)
-# -----------------------------------------------------------------------------
-# REPLACE the existing log_analytics_event function
+        # --- Read-Modify-Write Logic ---
+        events_for_day = []
+        if analytics_file.exists():
+            # Read the existing array using the helper
+            existing_data = read_json(analytics_file, default=[]) # Default to empty list on error/empty
+            # Ensure it's actually a list
+            if isinstance(existing_data, list):
+                events_for_day = existing_data
+            else:
+                logger.warning(f"Analytics file {analytics_file} did not contain a list. Starting fresh for today.")
+                # Optionally, back up the corrupted file here before overwriting
+                # backup_path = analytics_file.with_suffix(f".json.corrupted.{timestamp.isoformat().replace(':','-')}")
