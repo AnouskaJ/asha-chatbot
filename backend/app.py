@@ -1,30 +1,30 @@
-# Vector Store Setup and Functions
-# -----------------------------------------------------------------------------
-class GeminiEmbeddingFunction(EmbeddingFunction):
-    def __call__(self, input: List[str]) -> List[List[float]]:
-        genai.configure(api_key=Config.GEMINI_API_KEY)
-        model = "models/embedding-001"
-        try:
-            # Batch embedding requests if possible (check API limits)
-            # Simplified: process one by one if batching fails or isn't straightforward
-            embeddings = []
-            for text in input:
-                 result = genai.embed_content(model=model, content=text, task_type="retrieval_document")
-                 embeddings.append(result["embedding"])
-            return embeddings
-            # Note: Original code had `title` which might not be supported by all task types.
-            # Using batch embed requires careful handling of input size.
-            # result = genai.embed_content(model=model, content=input, task_type="retrieval_document")
-            # return result["embedding"] # This assumes batching works directly
-        except Exception as e:
-            logger.error(f"Error generating Gemini embedding: {e}")
-            # Provide zero vectors or raise a specific exception
-            raise RuntimeError("Embedding generation failed.") from e
+            embedding_function=GeminiEmbeddingFunction()
+        )
+        logger.info(f"Chroma collection '{Config.CHROMA_COLLECTION_NAME}' loaded/created.")
+        # Clear existing data before ingestion? Optional, depends on desired behavior.
+        # collection.delete(where={}) # Uncomment to clear before re-ingesting
+        _ingest_data(collection)
+        return collection
+    except Exception as e:
+        logger.error(f"Error initializing Chroma collection: {e}")
+        raise RuntimeError("Vector store initialization failed.") from e
 
-def initialize_vector_store() -> chromadb.api.models.Collection:
-    """Creates or loads the ChromaDB collection and ingests data."""
-    try:
-        client = PersistentClient(path=str(Config.CHROMA_DB_PATH)) # Path object needs conversion
-        # Use get_or_create for robustness
-        collection = client.get_or_create_collection(
-            name=Config.CHROMA_COLLECTION_NAME,
+def _ingest_data(collection: Collection):
+    """Helper function to ingest data into the collection with metadata."""
+    ingested_count = 0
+    # Ingest Jobs with metadata
+    jobs = read_csv(Config.JOBS_FILE)
+    if jobs:
+        logger.info(f"Attempting to ingest {len(jobs)} job listings...")
+        for idx, job in enumerate(jobs):
+            job_id = f"job_{job.get('id', uuid.uuid4())}"  # Use provided ID or generate one
+            doc_text = (
+                f"Job Title: {job.get('title', 'N/A')}\n"
+                f"Company: {job.get('company', 'N/A')}\n"
+                f"Location: {job.get('location', 'N/A')}\n"
+                f"Type: {job.get('type', 'N/A')}\n"
+                f"Deadline: {job.get('deadline', 'N/A')}\n"
+                f"Description: {job.get('description', 'No description available.')}"
+            )
+            # ADD METADATA HERE
+            metadata = {
