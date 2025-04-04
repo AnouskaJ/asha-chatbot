@@ -1,30 +1,30 @@
-                'source_type': 'job',
-                'apply_url': job.get('applyUrl', '#'),
-                'title': job.get('title', 'N/A'),
-                'company': job.get('company', 'N/A'),
+            # ADD METADATA HERE
+            metadata = {
+                'source_type': 'session',
+                'registerUrl': session.get('registerUrl', 'N/A'),
+                'title': session.get('title', 'N/A'),
                 'description': job.get('description', 'N/A'),
-                'location': job.get('location', 'N/A')
+                'date': session.get('date', 'N/A'),
+                'location': session.get('location', 'N/A')
             }
-        try:
-                # Add documents one by one for easier error isolation during dev
-                collection.add(documents=[doc_text], ids=[job_id], metadatas=[metadata])  # Add metadata
-                ingested_count += 1
-        except Exception as e:
-                logger.error(f"Failed to add job {job_id} to collection: {e}")
-        if ingested_count > 0:
-            logger.info(f"Successfully ingested {ingested_count} job listings.")
+    try:
+                collection.add(documents=[doc_text], ids=[session_id], metadatas=[metadata])  # Add metadata
+                ingested_session_count += 1
+    except Exception as e:
+        logger.error(f"Failed to add session {session_id} to collection: {e}")
+        if ingested_session_count > 0:
+            logger.info(f"Successfully ingested {ingested_session_count} session details.")
 
-    # Ingest Sessions with metadata
-    sessions = read_json(Config.SESSIONS_FILE, default=[])
-    if sessions:
-        logger.info(f"Attempting to ingest {len(sessions)} sessions...")
-        ingested_session_count = 0  # Use a different counter variable name
-        for idx, session in enumerate(sessions):
-            session_id = f"session_{session.get('id', uuid.uuid4())}"
-            doc_text = (
-                f"Session Title: {session.get('title', 'N/A')}\n"
-                f"Date: {session.get('date', 'N/A')}\n"
-                f"Time: {session.get('time', 'N/A')}\n"
-                f"Location: {session.get('location', 'N/A')}\n"
-                f"Description: {session.get('description', 'No description available.')}"
-            )
+    total_ingested = ingested_count + ingested_session_count  # Use both counters
+    if total_ingested == 0:
+        logger.warning("No data was successfully ingested into the vector store.")
+
+# Global variable for the vector store collection.
+vector_collection: Optional[chromadb.api.models.Collection] = None
+
+def update_vector_store():
+    """Reinitializes the vector store. Inefficient for large datasets."""
+    global vector_collection
+    try:
+        logger.info("Attempting to update vector store by re-initialization...")
+        vector_collection = initialize_vector_store()
