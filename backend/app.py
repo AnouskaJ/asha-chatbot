@@ -1,30 +1,30 @@
-        response = model.generate_content(prompt)
-        result = response.text.strip().lower()
-        
-        if result.startswith("biased: yes"):
-            match = re.search(r"type:\s*(\w+)", result)
-            bias_type = match.group(1) if match else "other"
-            return True, bias_type
-        else:
-            return False, None
-    except Exception as e:
-        logger.error(f"Error in API bias detection: {e}")
-        # Fallback keyword matching
-        biased_keywords = {
-            'gender': ['women can\'t', 'women should not', 'women are not', 'girls can\'t', 'females are', 'men always'],
-            'racial': ['race', 'ethnic', 'minority'],
-            'religious': ['religion', 'faith', 'belief', 'worship'],
-            'age': ['too old', 'too young', 'age', 'elderly']
-        }
-        query_lower = user_query.lower()
-        for bias_type, keywords in biased_keywords.items():
-            if any(term in query_lower for term in keywords):
-                logger.warning(f"Keyword bias detected (Type: {bias_type}) for query: {user_query}")
-                return True, bias_type
-        return False, None
-
-def handle_bias() -> str:
-    """Returns a standard response for biased queries."""
-    return "I focus on providing inclusive and respectful information related to career development. Let's rephrase or explore a different topic."
-
+# Vector Store Setup and Functions
 # -----------------------------------------------------------------------------
+class GeminiEmbeddingFunction(EmbeddingFunction):
+    def __call__(self, input: List[str]) -> List[List[float]]:
+        genai.configure(api_key=Config.GEMINI_API_KEY)
+        model = "models/embedding-001"
+        try:
+            # Batch embedding requests if possible (check API limits)
+            # Simplified: process one by one if batching fails or isn't straightforward
+            embeddings = []
+            for text in input:
+                 result = genai.embed_content(model=model, content=text, task_type="retrieval_document")
+                 embeddings.append(result["embedding"])
+            return embeddings
+            # Note: Original code had `title` which might not be supported by all task types.
+            # Using batch embed requires careful handling of input size.
+            # result = genai.embed_content(model=model, content=input, task_type="retrieval_document")
+            # return result["embedding"] # This assumes batching works directly
+        except Exception as e:
+            logger.error(f"Error generating Gemini embedding: {e}")
+            # Provide zero vectors or raise a specific exception
+            raise RuntimeError("Embedding generation failed.") from e
+
+def initialize_vector_store() -> chromadb.api.models.Collection:
+    """Creates or loads the ChromaDB collection and ingests data."""
+    try:
+        client = PersistentClient(path=str(Config.CHROMA_DB_PATH)) # Path object needs conversion
+        # Use get_or_create for robustness
+        collection = client.get_or_create_collection(
+            name=Config.CHROMA_COLLECTION_NAME,
