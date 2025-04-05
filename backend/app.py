@@ -1,30 +1,30 @@
-            # ADD METADATA HERE
-            metadata = {
-                'source_type': 'session',
-                'registerUrl': session.get('registerUrl', 'N/A'),
-                'title': session.get('title', 'N/A'),
-                'description': job.get('description', 'N/A'),
-                'date': session.get('date', 'N/A'),
-                'location': session.get('location', 'N/A')
-            }
-    try:
-                collection.add(documents=[doc_text], ids=[session_id], metadatas=[metadata])  # Add metadata
-                ingested_session_count += 1
+        logger.info("Vector store re-initialized successfully.")
+        return True
     except Exception as e:
-        logger.error(f"Failed to add session {session_id} to collection: {e}")
-        if ingested_session_count > 0:
-            logger.info(f"Successfully ingested {ingested_session_count} session details.")
+        logger.error(f"Error updating vector store: {e}")
+        return False
 
-    total_ingested = ingested_count + ingested_session_count  # Use both counters
-    if total_ingested == 0:
-        logger.warning("No data was successfully ingested into the vector store.")
-
-# Global variable for the vector store collection.
-vector_collection: Optional[chromadb.api.models.Collection] = None
-
-def update_vector_store():
-    """Reinitializes the vector store. Inefficient for large datasets."""
-    global vector_collection
+# -----------------------------------------------------------------------------
+# RAG Pipeline Functions (Refined Prompts)
+# -----------------------------------------------------------------------------
+# REPLACE this function:
+def get_relevant_passage(
+    query: str,
+    db: Collection, # Changed type hint
+    n_results: int = 5, # Retrieve more initially for potential filtering/ranking
+    source_type_filter: Optional[str] = None
+) -> List[Tuple[str, Dict[str, Any]]]:
+    """Retrieves relevant passages, optionally filtered by source_type, and returns docs with metadata."""
+    if not db:
+        logger.error("Vector store not available for query.")
+        return []
     try:
-        logger.info("Attempting to update vector store by re-initialization...")
-        vector_collection = initialize_vector_store()
+        # Construct the where clause only if a filter is provided
+        where_clause = {'source_type': source_type_filter} if source_type_filter else None
+
+        # Perform the query, including metadata and specifying the where clause if applicable
+        if where_clause:
+            results = db.query(query_texts=[query], n_results=n_results, where=where_clause, include=['documents', 'metadatas'])
+        else:
+            # Query without filter if no source type specified
+            results = db.query(query_texts=[query], n_results=n_results, include=['documents', 'metadatas'])
