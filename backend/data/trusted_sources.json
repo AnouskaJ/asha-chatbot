@@ -1,0 +1,137 @@
+[
+  {
+    "id": "1",
+    "name": "Ministry of Women and Child Development",
+    "url": "https://wcd.nic.in/",
+    "category": "government",
+    "description": "Official government portal with policies, programs, and initiatives for women's development in India",
+    "verified": true,
+    "dataType": "policies_programs"
+  },
+  {
+    "id": "2",
+    "name": "National Commission for Women",
+    "url": "http://ncw.nic.in/",
+    "category": "government",
+    "description": "Statutory body concerned with advising the government on all policy matters affecting women",
+    "verified": true,
+    "dataType": "legal_support"
+  },
+  {
+    "id": "3",
+    "name": "NITI Aayog - Women Entrepreneurship Platform",
+    "url": "https://wep.gov.in/",
+    "category": "government",
+    "description": "Initiative to promote and support aspiring and existing women entrepreneurs in India",
+    "verified": true,
+    "dataType": "entrepreneurship"
+  },
+  {
+    "id": "4",
+    "name": "UN Women - India",
+    "url": "https://asiapacific.unwomen.org/en/countries/india",
+    "category": "international_organization",
+    "description": "UN entity working for gender equality and women's empowerment in India",
+    "verified": true,
+    "dataType": "research_advocacy"
+  },
+  {
+    "id": "5",
+    "name": "Women Web",
+    "url": "https://www.womensweb.in/",
+    "category": "media_platform",
+    "description": "Digital platform and community for Indian women with content on career development and entrepreneurship",
+    "verified": true,
+    "dataType": "articles_resources"
+  },
+  {
+    "id": "6",
+    "name": "Sheroes",
+    "url": "https://sheroes.com/",
+    "category": "professional_network",
+    "description": "Women's community platform offering support, resources, and opportunities for career development",
+    "verified": true,
+    "dataType": "communities_jobs"
+  },
+  {
+    "id": "7",
+    "name": "The/Nudge Foundation",
+    "url": "https://thenudge.org/",
+    "category": "ngo",
+    "description": "Non-profit working to alleviate poverty through sustainable livelihoods, with programs focused on women",
+    "verified": true,
+    "dataType": "skilling_livelihoods"
+  },
+  {
+    "id": "8",
+    "name": "JobsForHer",
+    "url": "https://www.jobsforher.com/",
+    "category": "job_portal",
+    "description": "Portal connecting women with jobs, especially those returning to the workforce after career breaks",
+    "verified": true,
+    "dataType": "job_listings"
+  },
+  {
+    "id": "9",
+    "name": "Federation of Indian Women Entrepreneurs",
+    "url": "https://fiwe.org/",
+    "category": "industry_association",
+    "description": "Network of women entrepreneurs promoting economic empowerment through enterprise development",
+    "verified": true,
+    "dataType": "entrepreneurship_resources"
+  },
+  {
+    "id": "10",
+    "name": "Women in Technology (WiT) India",
+    "url": "https://wit-ace.com/",
+    "category": "professional_network",
+    "description": "Forum focused on increasing women's participation in STEM through mentorship and career development",
+    "verified": true,
+    "dataType": "tech_careers"
+  },
+  {
+    "id": "11",
+    "name": "NASSCOM Foundation",
+    "url": "https://www.nasscomfoundation.org/",
+    "category": "industry_association",
+    "description": "Technology industry association with initiatives for digital literacy and tech skilling for women",
+    "verified": true,
+    "dataType": "tech_education"
+  },
+  {
+    "id": "12",
+    "name": "SEWA (Self Employed Women's Association)",
+    "url": "https://www.sewa.org/",
+    "category": "trade_union",
+    "description": "Organization of self-employed women workers with programs for livelihood development",
+    "verified": true,
+    "dataType": "self_employment"
+  },
+  {
+    "id": "13",
+    "name": "TiE Women",
+    "url": "https://tie.org/tie-women/",
+    "category": "entrepreneurship_network",
+    "description": "Initiative to foster entrepreneurship among women through mentoring, networking, and funding",
+    "verified": true,
+    "dataType": "startup_resources"
+  },
+  {
+    "id": "14",
+    "name": "NITI Aayog - Women Transforming India Awards",
+    "url": "https://wep.gov.in/women-transforming-india-awards",
+    "category": "government",
+    "description": "Annual awards celebrating women achievers and change-makers across India",
+    "verified": true,
+    "dataType": "recognition_stories"
+  },
+  {
+    "id": "15",
+    "name": "LinkedIn - Opportunities Hub for Women",
+    "url": "https://opportunity.linkedin.com/skills-for-in-demand-jobs",
+    "category": "professional_network",
+    "description": "Resources and opportunities for women to develop skills for in-demand jobs",
+    "verified": true,
+    "dataType": "career_resources"
+  }
+] 
