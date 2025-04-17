@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core Colors */
+    --background: 0 0% 100%;  /* White */
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    /* JobsForHer Colors */
+    --primary: 84 56% 51%; /* #a5cd39 - JobsForHer green */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 330 39% 54%; /* #ad6088 - JobsForHer purple/pink */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 81 66% 93%; /* #f2f8e2 - JobsForHer light green */
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 84 56% 51%; /* #a5cd39 - JobsForHer green */
+    --radius: 0.5rem;
+
+    /* Sidebar Colors */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 262 55% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 262 55% 96%;
+    --sidebar-accent-foreground: 262 55% 52%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 262 55% 52%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Dark mode: Adjust primary to be a bit lighter for contrast */
+    --primary: 84 56% 51%; /* #a5cd39 - JobsForHer green */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 330 39% 54%; /* #ad6088 - JobsForHer purple/pink */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 81 66% 93%; /* #f2f8e2 - JobsForHer light green */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 84 56% 51%;
+
+    /* Sidebar for dark mode */
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 262 55% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 262 55% 60%;
+  }
+
+  /* Base Text & Typography Styles */
+  html {
+    font-size: 16px;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;  /* JobsForHer text style */
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+@layer components {
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold transition-colors;
+  }
+  .btn-primary:hover {
+    @apply bg-primary/90;
+  }
+  .btn-outline {
+    @apply border-2 border-primary text-primary px-4 py-2 rounded-md font-semibold transition-colors;
+  }
+  .btn-outline:hover {
+    @apply bg-accent;
+  }
+
+  /* Alternate Section Style */
+  .section-alt {
+    @apply bg-muted p-6 rounded-md;
+  }
+
+  /* Card Component */
+  .card {
+    @apply bg-card text-card-foreground p-4 rounded-md shadow-md;
+  }
+
+  /* Headings & Text */
+  .heading {
+    @apply text-2xl font-bold;
+  }
+  .text-body {
+    @apply text-base;
+  }
+}
