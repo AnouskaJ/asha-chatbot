@@ -145,47 +145,28 @@
   }
 }
 
-@layer base {
-  /* ------------------------------------------------------------------
-     1) The viewport wrapper Radix injects (for navigation-menu only)
-     ------------------------------------------------------------------ */
-  [data-radix-navigation-menu-viewport] {
-    @apply bg-white !important;
+@layer utilities {
+  /* 1) Catch every Popover/Dropdown/NavigationMenu container */
+  [data-radix-navigation-menu-viewport],
+  [data-radix-navigation-menu-content],
+  [data-radix-dropdown-menu-content],
+  [data-radix-popover-content] {
+    /* force pure white */
+    background-color: rgb(255, 255, 255) !important;
+    /* kill any Tailwind opacity var */
     --tw-bg-opacity: 1 !important;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+    /* remove any blur/backdrop filter */
     backdrop-filter: none !important;
     backdrop-blur: none !important;
+    /* ensure it’s fully opaque */
     opacity: 1 !important;
-    z-index: 9999 !important;
   }
 
-  /* ------------------------------------------------------------------
-     2) The content containers (menus, dropdowns, popovers)
-     ------------------------------------------------------------------ */
-  [data-radix-navigation-menu-content][data-state="open"],
-  [data-radix-dropdown-menu-content][data-state="open"],
-  [data-radix-popover-content][data-state="open"] {
-    @apply bg-white !important;
-    --tw-bg-opacity: 1 !important;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
-    backdrop-filter: none !important;
-    backdrop-blur: none !important;
-    opacity: 1 !important;
-    z-index: 9999 !important;
-  }
-
-  /* ------------------------------------------------------------------
-     3) Force individual items to stay solid white on hover / highlight
-     ------------------------------------------------------------------ */
-  /* NavigationMenu items get [data-highlighted] */
-  [data-radix-navigation-menu-content] [data-highlighted],
-  /* DropdownMenu items use :hover on <li> or role="menuitem" */
+  /* 2) Also make sure menu items inside stay solid on hover */
+  [data-radix-navigation-menu-content] [role="menuitem"]:hover,
   [data-radix-dropdown-menu-content] [role="menuitem"]:hover,
-  /* Same for Popover items if you style them manually */
   [data-radix-popover-content] [role="menuitem"]:hover {
-    @apply bg-white !important;
-    --tw-bg-opacity: 1 !important;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+    background-color: rgb(255, 255, 255) !important;
     opacity: 1 !important;
   }
 }
