@@ -66,7 +66,8 @@ const typingMessages = {
   tamil: "ஆஷா தட்டச்சு செய்கிறார்...",
   telugu: "ఆశా టైప్ చేస్తోంది...",
   gujarati: "આશા ટાઇપ કરી રહી છે...",
-  marathi: "आशा टाइप करत आहे...",
+
+  marathi: "आशा टाइપ करत आहे...",
   punjabi: "ਆਸ਼ਾ ਟਾਈਪ ਕਰ ਰਹੀ ਹੈ...",
   konkani: "आशा टायप करता...",
 }
@@ -742,7 +743,7 @@ export default function ChatPage() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           {/* Quick Actions (left) */}
           <div className="md:col-span-3">
-          <Card className="p-4 h-[78vh] border border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--secondary)/0.1)] dark:bg-[hsl(var(--secondary)/0.05)] rounded-xl shadow-sm">
+          <Card className="p-4 h-[78vh] border border-[hsl(var(--primary)/0.9)] bg-pink-100 dark:bg-[hsl(var(--secondary))] rounded-xl shadow-sm">
           <h3 className="font-semibold text-[hsl(var(--secondary))] text-lg mb-3">Quick Actions</h3>
 
               <div className="space-y-2">
@@ -764,21 +765,36 @@ export default function ChatPage() {
                 </Button>
               </div>
               {/* Language Selector */}
-              <div className="mt-6 space-y-2">
-              <h4 className="font-semibold text-[hsl(var(--secondary))] text-base mt-6 mb-2">Language</h4>
-                <Select value={selectedLanguage} onValueChange={(v) => setSelectedLanguage(v)}>
+              <div className="mt-6 space-y-2 bg-pink-100 dark:bg-[hsl(var(--secondary))] rounded-lg p-4 shadow">
+                <h4 className="font-semibold text-[hsl(var(--secondary))] text-base mt-0 mb-2">
+                  Language
+                </h4>
+                <Select
+                  value={selectedLanguage}
+                  onValueChange={(v) => setSelectedLanguage(v)}
+                >
                   <SelectTrigger id="language-selector" className="w-full">
                     <SelectValue placeholder="Select Language" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {languageOptions.map((lang) => (
-                      <SelectItem key={lang.value} value={lang.value}>
-                        {lang.label}
-                      </SelectItem>
-                    ))}
+
+                  {/* make the menu background white */}
+                  <SelectContent className="bg-white dark:bg-white">
+                    {/* optionally constrain height / padding */}
+                    <div className="py-1">
+                      {languageOptions.map((lang) => (
+                        <SelectItem
+                          key={lang.value}
+                          value={lang.value}
+                          className="bg-white text-black hover:bg-gray-200 dark:hover:bg-gray-200"
+                        >
+                          {lang.label}
+                        </SelectItem>
+                      ))}
+                    </div>
                   </SelectContent>
                 </Select>
               </div>
+
             </Card>
           </div>
 

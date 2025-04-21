@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 // Removed Tabs imports as they aren't used
 import { Activity, Users, MessageSquare, Languages, FileCheck, AlertTriangle, BarChart3 } from 'lucide-react';
 import { Loader2, AlertCircle, Flag } from 'lucide-react'; // Ensure Loader2 is imported
+
 // Removed AdminLayout import as it's commented out later
 // import { AdminLayout } from '@/components/AdminLayout';
 // Removed specific chart imports if using inline logic below

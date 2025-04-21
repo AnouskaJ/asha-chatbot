@@ -25,8 +25,8 @@ from chromadb.api.models.Collection import Collection
 from typing import List, Dict, Any, Optional, TypedDict # Add TypedDict here
 
 import config
+from config.config import GEMINI_API_KEY
 
-GEMINI_API_KEY = config.GEMINI_API_KEY
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__) # Define logger HERE
