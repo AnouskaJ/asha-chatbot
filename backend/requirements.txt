@@ -1,0 +1,7 @@
+flask
+flask-cors
+firebase-admin
+requests
+chromadb
+google-generativeai
+typing-extensions
