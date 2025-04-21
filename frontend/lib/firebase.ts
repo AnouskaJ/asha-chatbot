@@ -1,5 +1,14 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth';
 import { getFirestore, doc, getDoc, collection, setDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { UserProfile } from '@/types/user';
@@ -23,8 +32,19 @@ const storage = getStorage(app);
 export { app, auth, db, storage };
 
 // Authentication functions
-export const loginUser = async (email: string, password: string) => {
+// — Note: added `rememberMe` parameter and `setPersistence` call
+export const loginUser = async (
+  email: string,
+  password: string,
+  rememberMe: boolean = false
+) => {
   try {
+    // ** NEW: set persistence based on rememberMe **
+    await setPersistence(
+      auth,
+      rememberMe ? browserLocalPersistence : browserSessionPersistence
+    );
+
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     
     // Update user's last active time and session count
@@ -201,4 +221,4 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
     console.error('Error fetching user profile:', error);
     return null;
   }
-}; 
+};
