@@ -91,6 +91,7 @@
   p {
     margin-bottom: 1rem;
   }
+  
 }
 
 @layer components {
@@ -111,11 +112,19 @@
   /* Alternate Section Style */
   .section-alt {
     @apply bg-muted p-6 rounded-md;
+    --tw-bg-opacity: 1;
   }
 
   /* Card Component */
   .card {
-    @apply bg-card text-card-foreground p-4 rounded-md shadow-md;
+    @apply bg-white text-card-foreground p-4 rounded-md shadow-md;
+    --tw-bg-opacity: 1;
+  }
+
+  /* Popover Component */
+  .popover {
+    @apply bg-white text-popover-foreground p-4 rounded-md shadow-md onhover:bg-white;
+    --tw-bg-opacity: 1;
   }
 
   /* Headings & Text */
@@ -124,5 +133,59 @@
   }
   .text-body {
     @apply text-base;
+  }
+  .section-alt:hover,
+  .card:hover,
+  .popover:hover {
+    /* Tailwind “bg-white” + full-opacity */
+    @apply bg-white;
+    --tw-bg-opacity: 1;
+    /* fallback in case something else is winning */
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+  }
+}
+
+@layer base {
+  /* ------------------------------------------------------------------
+     1) The viewport wrapper Radix injects (for navigation-menu only)
+     ------------------------------------------------------------------ */
+  [data-radix-navigation-menu-viewport] {
+    @apply bg-white !important;
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+    backdrop-filter: none !important;
+    backdrop-blur: none !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+  }
+
+  /* ------------------------------------------------------------------
+     2) The content containers (menus, dropdowns, popovers)
+     ------------------------------------------------------------------ */
+  [data-radix-navigation-menu-content][data-state="open"],
+  [data-radix-dropdown-menu-content][data-state="open"],
+  [data-radix-popover-content][data-state="open"] {
+    @apply bg-white !important;
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+    backdrop-filter: none !important;
+    backdrop-blur: none !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+  }
+
+  /* ------------------------------------------------------------------
+     3) Force individual items to stay solid white on hover / highlight
+     ------------------------------------------------------------------ */
+  /* NavigationMenu items get [data-highlighted] */
+  [data-radix-navigation-menu-content] [data-highlighted],
+  /* DropdownMenu items use :hover on <li> or role="menuitem" */
+  [data-radix-dropdown-menu-content] [role="menuitem"]:hover,
+  /* Same for Popover items if you style them manually */
+  [data-radix-popover-content] [role="menuitem"]:hover {
+    @apply bg-white !important;
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+    opacity: 1 !important;
   }
 }
