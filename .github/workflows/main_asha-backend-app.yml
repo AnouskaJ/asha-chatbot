@@ -26,6 +26,10 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Write Firebase service account key to file
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > backend/config/asha-ai-firebase-adminsdk-fbsvc-e10ece5897.json
+
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
         with:
@@ -48,3 +52,4 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           app-name:        asha-backend-app
           package:         ./backend
+        # slot-name: production   
