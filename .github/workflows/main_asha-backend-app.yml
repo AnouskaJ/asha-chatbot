@@ -1,4 +1,4 @@
-name: Build & deploy Flask backend to Azure Web App
+name: Build and deploy Flask backend to Azure Web App - asha-backend-app
 
 on:
   push:
@@ -9,8 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python 3.12
@@ -18,22 +21,42 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install backend dependencies
+      - name: Create & activate virtualenv, install backend deps
         run: |
           cd backend
-          python -m venv .venv
-          source .venv/bin/activate
+          python -m venv venv
+          source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Zip **only** backend folder
+        run: |
+          cd ${{ github.workspace }}
+          zip -r backend.zip backend
 
-      - name: Login to Azure CLI
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-backend
+          path: backend.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: python-backend
+
+      - name: Unzip backend
+        run: unzip backend.zip
+
+      - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id:       ${{ secrets.AZURE_CLIENT_ID }}
@@ -41,14 +64,8 @@ jobs:
           tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Zip backend folder
-        run: |
-          cd ${{ github.workspace }}
-          zip -r backend.zip backend
-
-      - name: Deploy via az CLI
-        run: |
-          az webapp deployment source config-zip \
-            --resource-group asha-backend-app_group \
-            --name asha-backend-app \
-            --src backend.zip
+      - name: Deploy **backend/** to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name:        'asha-backend-app'
+          package:         './backend'
