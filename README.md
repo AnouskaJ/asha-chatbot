@@ -161,11 +161,11 @@ Follow these steps to run Asha Chatbot locally.
 
 | Layer     | Technology                                     |
 | --------- | ---------------------------------------------- |
-| Frontend  | React, Tailwind CSS, React Router, Axios       |
-| Backend   | Flask (FlashPacket), Flask-RESTful, SQLAlchemy |
-| Database  | SQLite (development), PostgreSQL (production)  |
+| Frontend  | NodeJS, React, Tailwind CSS, React Router, Axios       |
+| Backend   | Flask (FlashPacket), Flask-RESTful |
+| Database  | ChromaDB  |
 | Auth      | Firebase Auth, JWT                             |
-| Analytics | Chart.js, Kibana (planned)                     |
+| Analytics | Chart.js                     |
 | CI/CD     | GitHub Actions, Render.com                     |
 
 ---
