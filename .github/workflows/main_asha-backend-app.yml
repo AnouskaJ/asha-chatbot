@@ -1,3 +1,31 @@
+name: Build & Deploy Flask backend to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -5,18 +33,11 @@
       - name: Checkout code
         uses: actions/checkout@v4
 
--     - name: Login to Azure
--       uses: azure/login@v2
--       with:
--         client-id:       ${{ secrets.AZURE_CLIENT_ID }}
--         client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
--         tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
--         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-+     - name: Azure Login (service principal)
-+       uses: azure/login@v2
-+       with:
-+         creds:     ${{ secrets.AZURE_CREDENTIALS }}
-+         auth-type: service-principal
+      - name: Azure Login (service principal)
+        uses: azure/login@v2
+        with:
+          creds:     ${{ secrets.AZURE_CREDENTIALS }}
+          auth-type: service-principal
 
       - name: Zip backend folder
         run: |
