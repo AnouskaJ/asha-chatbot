@@ -33,9 +33,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Deploy backend via Publish Profile
-        uses: azure/webapps-deploy@v3
+      - name: Login to Azure CLI
+        uses: azure/login@v2
         with:
-          app-name:        'asha-backend-app'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package:         './backend'
+          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Zip backend folder
+        run: |
+          cd ${{ github.workspace }}
+          zip -r backend.zip backend
+
+      - name: Deploy via az CLI
+        run: |
+          az webapp deployment source config-zip \
+            --resource-group asha-backend-app_group \
+            --name asha-backend-app \
+            --src backend.zip
