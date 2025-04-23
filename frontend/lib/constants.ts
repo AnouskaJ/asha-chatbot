@@ -1,7 +1,7 @@
 // Constants used throughout the application
 
 // API URL for backend
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://asha-backend-app.azurewebsites.net';
 
 // Supported languages
 export const AVAILABLE_LANGUAGES = [
