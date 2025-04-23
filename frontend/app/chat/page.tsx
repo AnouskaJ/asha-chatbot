@@ -67,7 +67,7 @@ const typingMessages = {
   telugu: "ఆశా టైప్ చేస్తోంది...",
   gujarati: "આશા ટાઇપ કરી રહી છે...",
 
-  marathi: "आशा टाइપ करत आहे...",
+  marathi: "आશા ટाइપ करत आहे...",
   punjabi: "ਆਸ਼ਾ ਟਾਈਪ ਕਰ ਰਹੀ ਹੈ...",
   konkani: "आशा टायप करता...",
 }
@@ -649,7 +649,7 @@ export default function ChatPage() {
                     <SelectTrigger id="feedback-type">
                       <SelectValue placeholder="Select an issue type" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="inaccurate">Inaccurate Information</SelectItem>
                       <SelectItem value="biased">Biased Response</SelectItem>
                       <SelectItem value="irrelevant">Irrelevant Answer</SelectItem>
@@ -920,7 +920,7 @@ export default function ChatPage() {
                     onClick={isListening ? () => setIsListening(false) : handleSpeechToText}
                     className={`h-10 w-10 rounded-full ${isListening ? "bg-red-500" : "bg-secondary"} flex items-center justify-center ${voiceButtonClass}`}
                   >
-                    {isListening ? <Square className="h-5 w-5 text-white animate-pulse" /> : <Mic className="h-5 w-5 text-white" />}
+                    {isListening ? <Square className="h-5 w-5 text-white animate-pulse" /> : <Mic className="h-5 w-5 text-[hsl(var(--primary))]" />}
                   </button>
 
                 </div>
