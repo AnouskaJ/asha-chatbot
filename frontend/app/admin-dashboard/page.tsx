@@ -24,7 +24,7 @@ import Link from 'next/link';
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title);
 
 // API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://asha-backend-app.azurewebsites.net";
 
 // --- TYPE DEFINITIONS (Keep as is) ---
 interface Session { id: string | number; title: string; date: string; time: string; location: string; description: string; organizer?: string; registerUrl?: string; verified?: boolean; category?: string; tags?: string[]; source?: string; }
